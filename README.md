@@ -14,3 +14,12 @@ Use `python` version 3
 ```
 pip install -r requirements.txt
 ```
+
+### How to run
+
+```
+python3 Slack.py
+```
+
+This will result in a message/notification being send to the `slack-bot-test` channel in our slack group.
+You should be allowed into that channel now, if not ask for permission.
