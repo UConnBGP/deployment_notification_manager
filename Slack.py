@@ -3,7 +3,8 @@ import iso8601
 from typing import List
 
 #slack_webhook_url = "https://hooks.slack.com/services/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"
-slack_webhook_url = "https://hooks.slack.com/services/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"
+#slack_webhook_url = "https://hooks.slack.com/services/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"
+slack_webhook_url = "https://hooks.slack.com/services/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"
 '''
     This will post a messege to slack about a hijack.
     
