@@ -2,8 +2,8 @@ import requests
 import iso8601
 from typing import List
 
-# slack_webhook_url = "https://hooks.slack.com/services/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"
-slack_webhook_url = "https://hooks.slack.com/services/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"
+#slack_webhook_url = "https://hooks.slack.com/services/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"
+slack_webhook_url = "https://hooks.slack.com/services/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"
 '''
     This will post a messege to slack about a hijack.
     
@@ -14,7 +14,7 @@ slack_webhook_url = "https://hooks.slack.com/services/TCMHELH8S/B01BAFHNJA0/fQ8c
 
     Example call: hijackNotification("subprefix_hijack", "1.2.3.0/24", "2341, 1010, 1011, 286, 4040", "2341", "https://bgpstream.com/event/228898", "2020-03-16T17:38:48+00:00", "", ["ROV"], ["Drop Announcement"])
 '''
-def slackHijackNotification(hijack_type: str, prefix: str, as_path: str, recieved_from_asn: int, hijack_url: str, start_time: str, end_time: str, recommended_policies: List[str], recommended_actions: List[str]):
+def slackHijackNotification(hijack_type: str, prefix: str, as_path: str, recieved_from_asn: int, hijack_url: str, start_time: str, end_time: str, recommended_policies: List[str], recommended_actions: List[str], victim_origin_name: str, attacker_origin_name: str, pass_rov: bool, on_blacklist: bool, on_whitelist: bool, chance_of_hijack: float):
     policies = ""
     actions = ""
 
@@ -70,12 +70,12 @@ def slackHijackNotification(hijack_type: str, prefix: str, as_path: str, recieve
                     
                     {
                         "type": "mrkdwn",
-                        "text": "*Victim Origin Name*\n" + "INNFLOW-CH-001, CH"
+                        "text": "*Victim Origin Name*\n" + victim_origin_name
                     },
 
                     {
                         "type": "mrkdwn",
-                        "text": "*Attacker Origin Name*\n" + "UNNET-AS, RU"
+                        "text": "*Attacker Origin Name*\n" + attacker_origin_name
                     }
                 ]
             },
@@ -87,22 +87,22 @@ def slackHijackNotification(hijack_type: str, prefix: str, as_path: str, recieve
                 "fields": [                    
                     {
                         "type": "mrkdwn",
-                        "text": "*Pass ROV*\n" + "False"
+                        "text": "*Pass ROV*\n" + str(pass_rov)
                     },
 
                     {
                         "type": "mrkdwn",
-                        "text": "*On Blacklist*\n" + "True"
+                        "text": "*On Blacklist*\n" + str(on_blacklist)
                     },
                     
                     {
                         "type": "mrkdwn",
-                        "text": "*On Whitelist*\n" + "False"
+                        "text": "*On Whitelist*\n" + str(on_whitelist)
                     },
 
                     {
                         "type": "mrkdwn",
-                        "text": "*Chance of being hijacked*\n" + "90%"
+                        "text": "*Chance of being hijacked*\n" + str(int(chance_of_hijack * 100)) + "%"
                     }
                 ]
             },
@@ -149,4 +149,4 @@ def slackHijackNotification(hijack_type: str, prefix: str, as_path: str, recieve
 
 # slackHijackNotification("subprefix_hijack", "1.2.3.0/24", "2341, 1010, 1011, 286, 4040", "2341", "https://bgpstream.com/event/228898", "2020-03-16T17:38:48+00:00", "", ["ROV"], ["Drop Announcement"])
 
-slackHijackNotification("subprefix_hijack", "79.98.188.0/23", "49605, 9002, 31323", "31323", "https://bgpstream.com/event/238036", "2020-05-28T12:10:40+00:00", "", ["ROV++"], ["Create Blackhole\nhttps://12kds.rovppdashboard.com/drop_announcement?prefix=1.2.3.0/24"])
+slackHijackNotification("subprefix_hijack", "79.98.188.0/23", "49605, 9002, 31323", "31323", "https://bgpstream.com/event/238036", "2020-05-28T12:10:40+00:00", "", ["ROV++"], ["Create Blackhole\nhttps://12kds.rovppdashboard.com/drop_announcement?prefix=1.2.3.0/24"], "INNFLOW-CH-001, CH", "UNNET-AS, RU", False, True, False, .9)
