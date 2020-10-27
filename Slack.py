@@ -3,11 +3,10 @@ import iso8601
 import os
 from typing import List
 
-#slack_webhook_url = "https://hooks.slack.com/services/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"
-#slack_webhook_url = "https://hooks.slack.com/services/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"
-#slack_webhook_url = "https://hooks.slack.com/services/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"
-#slack_webhook_url = "https://hooks.slack.com/services/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"
 slack_webhook_url = os.getenv('SLACK_WEBHOOK')
+ROV = "Drop Announcement\nhttps:///drop_announcement?prefix="
+ROVPP = "Create Blackhole\nhttps:///create_blackhole?prefix="
+
 '''
     This will post a messege to slack about a hijack.
     
@@ -18,6 +17,13 @@ slack_webhook_url = os.getenv('SLACK_WEBHOOK')
 
     Example call: hijackNotification("subprefix_hijack", "1.2.3.0/24", "2341, 1010, 1011, 286, 4040", "2341", "https://bgpstream.com/event/228898", "2020-03-16T17:38:48+00:00", "", ["ROV"], ["Drop Announcement"])
 '''
+
+def gen_action_url(ROVorPP, prefix, domain):
+    if ROVorPP == ROV:
+        return ROVorPP[:26] + domain + ROVorPP[26:] + prefix
+    elif ROVorPP == ROVPP:
+        return ROVorPP[:25] + domain + ROVorPP[25:] + prefix
+
 def slackHijackNotification(hijack_type: str, prefix: str, as_path: str, recieved_from_asn: int, hijack_url: str, start_time: str, end_time: str, recommended_policies: List[str], recommended_actions: List[str], victim_origin_name: str, attacker_origin_name: str, pass_rov: bool, on_blacklist: bool, on_whitelist: bool, chance_of_hijack: float):
     policies = ""
     actions = ""
@@ -150,7 +156,5 @@ def slackHijackNotification(hijack_type: str, prefix: str, as_path: str, recieve
 
     requests.post(slack_webhook_url, json=payload)
     
-
-# slackHijackNotification("subprefix_hijack", "1.2.3.0/24", "2341, 1010, 1011, 286, 4040", "2341", "https://bgpstream.com/event/228898", "2020-03-16T17:38:48+00:00", "", ["ROV"], ["Drop Announcement"])
-
-slackHijackNotification("subprefix_hijack", "79.98.188.0/23", "49605, 9002, 31323", "31323", "https://bgpstream.com/event/238036", "2020-05-28T12:10:40+00:00", "", ["ROV++"], ["Create Blackhole\nhttps://12kds.rovppdashboard.com/drop_announcement?prefix=1.2.3.0/24"], "INNFLOW-CH-001, CH", "UNNET-AS, RU", False, True, False, .9)
+action = [gen_action_url(ROV, "1.2.3.0/23", "12kds.rovppdashboard.com")]
+slackHijackNotification("subprefix_hijack", "79.98.188.0/23", "49605, 9002, 31323", "31323", "https://bgpstream.com/event/238036", "2020-05-28T12:10:40+00:00", "", ["ROV++"], action, "INNFLOW-CH-001, CH", "UNNET-AS, RU", False, True, False, .9)
